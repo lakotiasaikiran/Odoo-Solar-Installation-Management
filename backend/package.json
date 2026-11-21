@@ -1,0 +1,21 @@
+{
+  "name": "photonix-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=22.9"
+  },
+  "dependencies": {
+    "express": "^5",
+    "helmet": "^8",
+    "bcryptjs": "^3",
+    "jsonwebtoken": "^9",
+    "pg": "^8",
+    "express-rate-limit": "^8"
+  }
+}

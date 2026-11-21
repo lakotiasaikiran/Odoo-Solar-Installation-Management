@@ -1,0 +1,381 @@
+Photonix | Solar Installation Management System
+Mandatory requirements checklist
+Source: Solar_Installation_Management_System.pdf, “A Week at SunPower” and “Packages”.
+Check a box when the behaviour works end to end.
+
+1. Enquiries and site approval
+[ ] Keep a sales record for enquiries received through WhatsApp, calls, and the web form. Web submissions must reach sales immediately with the customer's name, phone, address, and needs, including a subsidy request when applicable.
+[ ] Record the qualification call covering shadow-free roof area, monthly electricity bill, and grid suitability.
+[ ] For a suitable site, record the technician's survey findings on roof direction, tilt, and cable distance.
+[ ] Allow a quote to be sent to the customer only after survey approval.
+
+2. Packages, quotations, and confirmed orders
+[ ] Offer a solar panel hardware set with panels, connectors, and wires, plus an installation service covering on-site fitting and testing.
+[ ] Support on-grid and off-grid systems from 1 kW to 5 kW. The on-grid kit includes panels, inverter, wiring boxes, charge controller, safety earthing, and metal stands. The off-grid kit adds a storage battery.
+[ ] Generate quotes from ready-made templates. The selected package and capacity must supply the complete parts list, including switches, wiring, and safety parts.
+[ ] Record an advance or full payment before work starts when paid. The brief describes this as the usual payment flow.
+[ ] On order confirmation, automatically give the warehouse its packing list and put the installation job on the crew's schedule.
+
+3. Dispatch, delivery, and warranties
+[ ] Track stock for high-value equipment such as panels, inverters, and batteries.
+[ ] Require a serial scan for every inverter, battery, and charge controller before it leaves the warehouse. Link each dispatched unit to its customer.
+[ ] On completed delivery, automatically start the warranty for each serial number using the applicable product term. Example terms in the brief are 2 years for an inverter or battery and 20 years for a panel.
+
+4. Installation and customer acceptance
+[ ] Support the crew's field workflow through mounting stands, laying panels, connecting boxes, completing earthing, and testing power generation.
+[ ] Provide a phone- or tablet-friendly completion form for start time, finish time, installed system size, and finished-roof photos.
+[ ] Capture the customer's on-screen acceptance signature and retain it with the installation record as proof of work.
+
+5. Breakdowns and after-sales service
+[ ] Open a complaint ticket and quickly retrieve the customer's installation, exact equipment serial number, and warranty status.
+[ ] Provide an in-warranty repair or replacement at no charge. Automatically bill parts and labour for an out-of-warranty repair.
+[ ] Track the ticket until the customer confirms the system works.
+
+6. Finance and management reporting
+[ ] Track advances, send invoices, record stock purchases, capture technician hours, and track technician pay.
+[ ] Track government subsidy paperwork and outstanding steps for each customer.
+[ ] Show revenue, costs, and profit or loss for each installation so the director can identify profitable and loss-making jobs.
+[ ] Provide daily, weekly, and monthly views of performance, unfinished installations, and open repairs. Allow the director to share the figures.
+
+Project working agreement
+Development folder: C:\Users\saiki\Desktop\Odoo-SIMS
+Repository: https://github.com/lakotiasaikiran/Odoo-Solar-Installation-Management
+Work locally in the Desktop folder. Ask for and receive the user's permission before taking any GitHub action, including cloning, fetching, pulling, pushing, or creating a pull request.
+
+# Photonix — Additional Project Requirements
+
+The official Solar Installation Management System problem statement has already been provided. All its mandatory requirements must remain intact.
+
+The following additional requirements address real-world challenges faced by Indian rooftop solar customers and installation companies.
+
+The primary objective is to make solar adoption more affordable, accessible, transparent and reliable for customers while improving revenue, profitability and operational efficiency for companies.
+
+## 1.Photonix — Accessible Customer Acquisition
+
+Problem: Potential customers lack awareness of solar technology, subsidies, financing options and installation procedures. Customers with limited digital literacy struggle to initiate the process.
+
+Requirements:
+
+- Simplified customer onboarding without requiring technical knowledge.
+- English and Hindi language support.
+- Employee-assisted registration for customers enquiring through telephone calls or physical visits.
+- Collect customer requirements, including:
+  - Residential or commercial property.
+  - Monthly electricity consumption and bill.
+  - Available rooftop space.
+  - Installation budget.
+  - Power backup requirements.
+  - Preferred payment method.
+- Recommend a preliminary solar system capacity based on customer requirements.
+- Explain on-grid and off-grid systems in understandable language.
+- Display relevant benefits, limitations and estimated costs.
+- Provide preliminary government subsidy eligibility information.
+- Explain available financing and installment options without guaranteeing loan approval.
+- Automatically register customer enquiries in the CRM.
+- Track individual customer requirements, concerns, communication history and follow-ups.
+- Identify unattended enquiries and notify responsible employees.
+- Require technical site survey approval before generating the final quotation.
+
+Expected business impact: Increased customer acquisition, improved conversion rates, reduced lost leads and accessibility for non-technical customers.
+
+Metrics:
+- Lead conversion rate.
+- Missed enquiries.
+- Customer onboarding time.
+- Average lead response time.
+- Customer acquisition cost.
+- Enquiry-to-installation conversion rate.
+
+## 2. SolarFit — Intelligent Affordability and Profit Protection
+
+Priority: Primary product differentiator.
+
+Problem: Customers face expensive installations, unclear pricing and unsuitable system recommendations. Companies face fluctuating equipment prices, procurement expenses and declining profit margins.
+
+Requirements:
+
+- Recommend suitable solar packages between 1 kW and 5 kW based on customer needs.
+- Prevent unnecessary system oversizing.
+- Generate multiple suitable package options, such as economical, balanced and premium.
+- Compare packages based on:
+  - Installation cost.
+  - Equipment specifications.
+  - Estimated power generation.
+  - Warranty coverage.
+  - Expected electricity savings.
+  - Estimated payback period.
+  - Customer budget.
+- Calculate estimated installation costs using actual available product and procurement prices.
+- Display transparent cost breakdowns, including equipment, labour, transportation and applicable taxes.
+- Display gross installation price, estimated subsidy and effective post-subsidy cost separately.
+- Distinguish residential and commercial subsidy eligibility.
+- Provide indicative EMI and financing cost calculations.
+- Calculate estimated monthly and annual electricity savings.
+- Calculate simple return on investment and payback period.
+- Keep electricity tariffs, generation assumptions and subsidy rules configurable.
+- Generate accurate bills of materials from selected packages.
+- Identify compatible, lower-cost equipment alternatives without compromising safety, quality or performance.
+- Compare supplier prices, stock availability, warranty coverage and delivery timelines.
+- Recommend cost-efficient procurement options.
+- Alert employees when equipment prices increase after quotation creation.
+- Maintain quotation validity periods and historical pricing.
+- Calculate expected project contribution before confirming a quotation.
+- Prevent or flag quotations below the company's configurable minimum profit margin.
+- Identify opportunities to pass a portion of operational savings to customers while maintaining company profitability.
+- Compare estimated project costs against actual expenses.
+- Identify the reasons behind project cost overruns.
+- Clearly communicate that estimated savings, subsidies and payback periods are conditional and not guaranteed.
+
+Expected business impact: Lower customer expenditure, transparent pricing, reduced unnecessary procurement costs, improved sales conversion and protected company margins.
+
+Metrics:
+- Average installation cost per kW.
+- Customer cost savings.
+- Procurement cost variance.
+- Quotation acceptance rate.
+- Estimated versus actual project cost.
+- Contribution margin per installation.
+- Number of loss-making projects.
+- Amount of preventable cost leakage.
+
+## 3. SubsidyBridge — Simplified Government Documentation
+
+Problem: Customers struggle to understand subsidy procedures, documentation requirements and government approval statuses. Installation companies lose time and customers due to administrative delays.
+
+Requirements:
+
+- Provide a centralized digital case file for every applicable customer.
+- Explain the subsidy application process using simple step-by-step guidance.
+- Automatically generate applicable document checklists based on customer and project type.
+- Allow authorized employees to upload and verify required documents.
+- Identify missing, incomplete or rejected documents.
+- Track government application reference numbers.
+- Track applicable milestones, including:
+  - Application registration.
+  - Feasibility approval.
+  - Documentation verification.
+  - Installation completion.
+  - DISCOM inspection.
+  - Net-meter installation.
+  - Commissioning.
+  - Subsidy claim.
+  - Subsidy disbursement.
+- Display current status, pending requirements and next required action.
+- Assign responsibility for each pending action.
+- Identify delays caused by customers, installation companies, suppliers or government authorities.
+- Notify responsible employees about overdue actions and incomplete documentation.
+- Provide customers with a simple installation and subsidy progress tracker.
+- Maintain a timestamped history of application status changes.
+- Provide access to the official government portal.
+- Protect sensitive personal and financial documents.
+- Use verified manual updates unless an authorized government integration is available.
+- Never generate false approval statuses or guarantee government processing timelines.
+
+Expected business impact: Reduced preventable documentation errors, fewer customer follow-up calls, improved transparency and faster completion of internally controllable processes.
+
+Metrics:
+- Application processing time.
+- Documentation rejection rate.
+- Incomplete applications.
+- Overdue milestones.
+- Average project delay.
+- Projects blocked by government dependencies.
+- Outstanding payments associated with delayed projects.
+
+## 4. SmartOps — Proactive Installation and Resource Management
+
+Problem: Installation companies experience technician shortages, scheduling conflicts, unavailable materials, repeat visits and unnecessary operational expenditure.
+
+Requirements:
+
+- Implement an installation readiness assessment for every confirmed project.
+- Verify the following prerequisites before releasing installation work:
+  - Approved site survey.
+  - Confirmed customer requirements.
+  - Accepted quotation.
+  - Required advance payment.
+  - Complete material availability.
+  - Equipment compatibility.
+  - Applicable government approvals.
+  - Qualified technician availability.
+  - Site and safety readiness.
+- Display an installation readiness score and individual blocking reasons.
+- Prevent installation release when mandatory prerequisites remain incomplete.
+- Identify missing materials before dispatch.
+- Recommend suitable technicians based on:
+  - Technical qualifications.
+  - Relevant skills.
+  - Availability.
+  - Current workload.
+  - Customer location.
+  - Previous job experience.
+- Prevent overlapping technician assignments.
+- Group nearby installation and maintenance jobs where practical to reduce transportation costs.
+- Track estimated and actual installation duration.
+- Provide technicians with simplified access to assigned jobs and customer site information.
+- Require relevant installation quality and safety checklists.
+- Identify damaged, missing or incompatible equipment.
+- Record reasons for installation delays and cancellations.
+- Track repeat visits, corrective work and associated expenses.
+- Automatically associate labour, transportation and additional material expenses with the relevant project.
+- Identify technicians or teams requiring additional training based on recurring quality issues.
+- Maintain complete installation evidence and customer acceptance records.
+
+Expected business impact: Fewer installation delays, reduced unnecessary visits, improved workforce utilization, lower operational expenses and increased installation capacity.
+
+Metrics:
+- Technician utilization rate.
+- Technician idle hours.
+- Installations completed per month.
+- Average installation turnaround time.
+- Transportation cost per installation.
+- First-time installation success rate.
+- Repeat visit rate.
+- Installation cost overruns.
+- Number of blocked projects.
+
+## 5. SolarCare — Lifetime Customer Support and Trust
+
+Problem: Customers experience poor after-sales support, missing warranty information, unexpected repair charges and difficulty identifying responsible service providers.
+
+Requirements:
+
+- Provide a digital solar equipment passport for every installed system.
+- Include equipment information, serial numbers, installation details, warranty conditions and service history.
+- Enable QR-based identification of installed systems.
+- Allow employees to retrieve customer equipment records using registered customer details or serial numbers.
+- Allow customers to report equipment issues through a simplified interface.
+- Support employee-assisted complaint registration for customers with limited digital literacy.
+- Automatically retrieve applicable warranty information when a service request is created.
+- Determine potential warranty coverage and distinguish covered and non-covered repairs.
+- Provide transparent repair estimates before performing chargeable work.
+- Prioritize service requests based on severity and customer impact.
+- Track technician assignments and service resolution progress.
+- Notify customers about relevant service updates.
+- Maintain complete repair and equipment replacement histories.
+- Schedule preventive maintenance based on applicable maintenance requirements.
+- Notify responsible employees about approaching warranty expirations.
+- Offer paid maintenance plans where services are not already covered.
+- Collect customer satisfaction feedback after installation and service resolution.
+- Identify recurring equipment failures and associated suppliers.
+- Enable customer referrals following satisfactory installation or service experiences.
+
+Expected business impact: Improved customer trust, reduced service administration costs, customer retention, referral-based acquisition and recurring maintenance revenue opportunities.
+
+Metrics:
+- Average complaint response time.
+- Average service resolution time.
+- First-visit resolution rate.
+- Warranty claim recovery.
+- Cost per service request.
+- Repeat equipment failure rate.
+- Customer satisfaction score.
+- Customer referral rate.
+- Maintenance service revenue.
+
+## 6. Financial Risk and Business Growth Intelligence
+
+Problem: Companies cannot accurately identify financial losses, delayed payments, unprofitable installations or operational bottlenecks.
+
+Requirements:
+
+- Provide project-wise financial visibility.
+- Track estimated and actual revenue, direct costs and contribution margins.
+- Track material, labour, transportation, rework and maintenance expenditure.
+- Identify projects exceeding their approved budgets.
+- Identify loss-making and low-margin projects.
+- Track customer advances, pending payments and overdue invoices.
+- Track upcoming supplier payments and outstanding receivables.
+- Calculate working capital requirements for upcoming installations.
+- Identify projects where insufficient cash or inventory may delay execution.
+- Provide actionable business alerts, including:
+  - Unattended customer enquiries.
+  - Low-margin quotations.
+  - Increasing procurement costs.
+  - Insufficient inventory.
+  - Overdue customer payments.
+  - Incomplete documentation.
+  - Installation readiness failures.
+  - Technician scheduling conflicts.
+  - Overdue service requests.
+  - Unexpected project expenses.
+- Quantify the estimated financial impact of identifiable operational problems.
+- Display recommended corrective actions based on actual business data.
+- Distinguish revenue, cash received, contribution margin and net profit.
+- Provide daily, weekly and monthly business performance summaries.
+- Track improvements against historical business performance.
+- Never present fabricated savings, financial improvements or business metrics as actual results.
+
+Expected business impact: Better financial decisions, reduced revenue leakage, improved cash flow, stronger profitability and sustainable business expansion.
+
+## 7. Product Accessibility and Usability Requirements
+
+- Design customer-facing interfaces for people without technical knowledge.
+- Minimize the number of steps required to submit enquiries and service requests.
+- Use understandable terminology instead of unnecessary technical jargon.
+- Provide mobile-friendly customer and technician interfaces.
+- Support both self-service and employee-assisted workflows.
+- Allow customers to track their individual installation journey.
+- Avoid requiring customers to repeatedly provide information already available in the system.
+- Maintain transparent pricing, service charges and project statuses.
+- Protect customer documents and personal information.
+- Ensure different employees access only information relevant to their responsibilities.
+
+## 8. Integration Requirements
+
+- All additional features must operate within the original Solar Installation Management System.
+- Maintain one centralized customer and project history throughout the entire lifecycle.
+- Customer recommendations must connect to CRM and quotations.
+- Pricing calculations must use product, inventory and procurement information.
+- Financial information must reflect actual sales, payments and operational expenses.
+- Documentation progress must influence installation readiness where applicable.
+- Technician activities must update project progress and actual labour costs.
+- Equipment dispatch and delivery must connect to customer asset and warranty records.
+- Service requests must retrieve the corresponding customer, equipment and warranty information.
+- Business metrics must be derived from actual recorded transactions and workflow events.
+- Avoid disconnected features, duplicate data entry and redundant business processes.
+
+## 9. Priority of Additional Requirements
+
+P0 — Primary Business Differentiators
+- Accessible and assisted customer onboarding.
+- Intelligent solar package recommendations.
+- Customer affordability and savings estimation.
+- Cost-efficient pricing with profit protection.
+- Proactive installation readiness validation.
+- Project-wise profitability and financial risk identification.
+
+P1 — Business Reliability
+- Government documentation and subsidy tracking.
+- Intelligent technician allocation.
+- Customer progress tracking.
+- Digital equipment and warranty passport.
+- Automated business risk alerts.
+
+P2 — Business Expansion
+- Preventive maintenance scheduling.
+- Customer referral management.
+- Supplier performance analysis.
+- Maintenance plans.
+- Advanced business performance comparisons.
+
+All mandatory requirements from the original problem statement take precedence over optional enhancements.
+
+Every additional feature must contribute directly to at least one of the following objectives:
+
+- Increased customer acquisition.
+- Reduced customer installation expenditure.
+- Improved accessibility.
+- Reduced operational expenses.
+- Improved installation reliability.
+- Increased company profitability.
+- Improved customer trust and retention.
+- Sustainable business growth.
+
+Exclude unnecessary features that do not contribute measurable value to these objectives.
+
+
+10. Demo checkout and role-specific frontend
+[ ] Offer Razorpay Test Mode checkout for advance, full amount or outstanding balance based on the customer's accepted order quantities, price version and recorded payments.
+[ ] Give each profession its own authorized landing page, actions and data. Apply the same permissions to application requests, downloads and live updates.
+[ ] Provide role-specific navigation, responsive layouts and accessible feedback. The role/page mapping and payment acceptance tests are in WORKFLOW-AND-SPRINTS.md.

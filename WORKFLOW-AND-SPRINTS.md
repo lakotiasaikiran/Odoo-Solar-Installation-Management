@@ -1,4 +1,4 @@
-# HelioDesk | System workflow and hackathon sprint plan
+# Photonix | System workflow and hackathon sprint plan
 
 Planning date: 21 November 2026. All times are IST. Coding deadline: 22 November, 07:00. The master requirements checklist governs coverage. These timeboxes are estimates starting around 13:00, with one team working through the slices in order. All sprint acceptance tests below are planned.
 
@@ -27,7 +27,7 @@ Show each profession its queue, blocker and next action. The director can see a 
 
 ## Timeboxed delivery
 
-Each sprint delivers one working journey through interface, business rules, storage and permissions. Frontend work follows the user's design preferences. Backend work enforces rules independently of the interface. Workflow approved. Use React/Next.js, Node.js/Express and scoped WebSocket notifications. The database recommendation and integration test are recorded in ARCHITECTURE.md. The existing local Odoo installation is available for that decision.
+Each sprint delivers one working journey through interface, business rules, storage and permissions. Frontend work follows the user's design preferences. Backend work enforces rules independently of the interface. Workflow approved. Use React/Next.js, Node.js/Express and scoped WebSocket notifications. The database recommendation and integration test are recorded in ARCHITECTURE.md.
 
 | Sprint (IST) | Increment to demonstrate | Acceptance evidence before advancing |
 | --- | --- | --- |
@@ -47,7 +47,7 @@ Each sprint delivers one working journey through interface, business rules, stor
 2. Reserve roughly the last quarter of each timebox for testing, bug fixes and review. Exercise the successful path, a blocked business transition, and a forbidden role or record. Test retries for operations that create money, assets or downstream jobs.
 3. For a failure, record reproduction steps, expected/actual result and impact. Fix it, rerun its test and replay the upstream handoff. Keep the checklist item open until the evidence passes.
 4. Review the working increment, record pass or hold, and identify one adjustment for the next sprint. Data exposure, incorrect billing or warranty, broken handoffs and failed mandatory gates hold progression. If a slot overruns, reforecast the remaining time immediately. Simplify UI polish and defer P2 expansion first. Report any mandatory gap explicitly.
-5. Source of truth for remaining work: HelioDesk Requirements.txt. Keep additional P1/P2 items visible in the backlog. Pull them forward only after the dependent official path passes and the release buffer is protected.
+5. Source of truth for remaining work: Photonix Requirements.txt. Keep additional P1/P2 items visible in the backlog. Pull them forward only after the dependent official path passes and the release buffer is protected.
 
 ### Hourly GitHub evidence
 
@@ -81,3 +81,40 @@ Use each numbered item as a sprint review check. Record the observed result befo
 20. Sprint 3 — Track government subsidy paperwork and outstanding steps for each customer.
 21. Sprint 6 — Show revenue, costs, and profit or loss for each installation so the director can identify profitable and loss-making jobs.
 22. Sprint 6 — Provide daily, weekly, and monthly views of performance, unfinished installations, and open repairs. Allow the director to share the figures.
+
+## Demo checkout and role-specific screens
+
+### From quantity selection to verified receipt (sprints 2 and 3)
+
+1. The customer changes an allowed whole-item quantity on a draft. Show unit price, quantity, line total, applicable tax, order total, prior verified payments and amount due in INR. Keep estimated subsidy separate from the payable amount. A quantity change affecting system fit or installation scope goes back through technical review.
+2. Recalculate on the server from authorized order lines, available quantities and the accepted price version. Reject zero, negative or excessive quantities. A changed accepted order needs a revised quote, fresh customer acceptance and fresh checkout. Preserve the original version for reconciliation.
+3. For advance, full or remaining payment, create the Razorpay Test Mode order on the server in integer paise. Bind it to the customer, installation, order revision, amount and currency. Test keys stay separate from live keys; secrets stay on the server.
+4. After Checkout, verify the signature against the server's stored order ID and confirm captured status, amount and currency using the provider. Validate webhook signatures over raw request bytes and deduplicate events. For a localhost demo, server-side provider lookup can confirm capture when webhook delivery is unavailable.
+5. Record each captured payment once, then update the receipt, outstanding balance, finance queue and payment readiness. Failed, cancelled or pending attempts leave the payable balance open. A late capture for a superseded order goes to finance reconciliation. A customer can access only their own order and receipt.
+
+Acceptance demo with synthetic tax-inclusive prices: change two ₹1,500 accessories to three. Verify ₹4,500 due. Capture a ₹1,000 advance and show ₹3,500 remaining. Retry the callback and verify the balance stays ₹3,500. Test a cancelled attempt, a changed browser total, an obsolete order revision, and a second customer's attempt to view the receipt. Display “Test payment” throughout. Passing the payment gate releases work only when the other readiness checks also pass.
+
+### Landing page by profession (sprints 1–6)
+
+| Role | First useful view and action |
+| --- | --- |
+| Customer | My installation, compare quote, adjust allowed draft quantities, pay, download receipt or raise a service request. |
+| Sales adviser | Lead pipeline, unanswered enquiries, site requirements and quote revisions awaiting customer acceptance. |
+| Survey technician | Assigned visits, measurements and submit-for-review action. |
+| Technical reviewer | Surveys awaiting decision, changed site assumptions and reasons to return a survey. |
+| Sales manager | Margin exceptions, quote validity and documented pricing decisions. |
+| Buyer | Supplier comparison, cost increases and compatible alternatives. |
+| Warehouse operator | Packing list, missing items, serial scanning and delivery confirmation. |
+| Subsidy coordinator | Document verification, missing evidence and next milestone. |
+| Dispatcher | Readiness blockers, qualified crew availability and schedule conflicts. |
+| Installer | Today's assigned sites, safety checks, photos, times and customer signature. |
+| Service adviser | Complaint triage, warranty lookup, estimates and customer-confirmed closure. |
+| Service technician | Assigned repairs, diagnosis, parts and resolution evidence. |
+| Finance | Verified receipts, unpaid balances, invoice matching and payment exceptions. |
+| Director | Job profitability, unfinished installations and open repairs with scoped reporting. |
+
+Test each page with a user assigned that role. Verify the permitted action works and a direct request for a restricted record, field, download or live subscription is denied. For multi-role employees, scope the queue to their selected work context and enforce their assigned permissions on the server.
+
+Prototype the quote/checkout screen beside Finance's receipt queue. Group staff tasks by stage, adapt navigation to screen size, and use motion to show meaningful state changes. Keep the amount and primary action legible in English and Hindi. Pair animation with a text status and respect reduced motion.
+
+Payment integration references: [Razorpay Standard Checkout](https://razorpay.com/docs/payments/payment-gateway/web-integration/standard/integration-steps/), [Razorpay webhook validation](https://razorpay.com/docs/webhooks/validate-test/).
