@@ -6,7 +6,7 @@
 
 **Rooftop solar installation management, from the first enquiry to customer sign-off.**
 
-[Problem](#problem-statement) · [Solution](#solution) · [Architecture](#system-architecture) · [Installation](#local-installation) · [Vercel deployment](#deploy-the-frontend-on-vercel)
+[Problem](#problem-statement) · [Solution](#solution) · [Architecture](#system-architecture) · [Installation](#local-installation)
 
 </div>
 
@@ -117,17 +117,3 @@ Open the [homepage](http://127.0.0.1:3200/), [customer sign-in](http://127.0.0.1
 Run the web tests with `npm --prefix web test`. With the isolated services running, use `.\start-sprint1.ps1 -Smoke` to exercise the sales, survey, and quotation path against local demo records.
 
 For a presentation, open an approved enquiry, download its quotation, then show a partially paid invoice in Finance. A ₹100,000 invoice with a ₹25,000 receipt should show ₹75,000 outstanding after refresh.
-
-## Deploy the frontend on Vercel
-
-**Deployment boundary:** Vercel builds the Next.js app in `web/`. The current Express and Odoo processes run separately. A hosted frontend needs a reachable HTTPS API and persistent databases for sign-in, enquiry tracking, and billing.
-
-1. Push the revision you intend to deploy to GitHub, including the frontend, matching API, and required schema files.
-2. Provision PostgreSQL and Odoo, install the Photonix add-on, and host Express on a service that can reach both. The checked-in Express entry point binds to loopback; configure a suitable listener or a reverse proxy for your hosting environment. Verify the hosted API’s `/health` endpoint.
-3. In Vercel, import the GitHub repository. Choose **Next.js** and set **Root Directory** to **web**. Use the framework defaults for build and output.
-4. Add **API_ORIGIN** to the Vercel environment you are deploying, for example `https://api.example.com`. Use the origin only, without `/api`. The [rewrite configuration](web/next.config.mjs) forwards browser requests to that service. Redeploy after changing the value.
-5. Check the deployed homepage and a database-backed flow such as staff sign-in or customer tracking. A working homepage alone verifies only the frontend.
-
-Keep `DATABASE_URL`, `JWT_SECRET`, and Odoo credentials on the backend host. The local launcher enables demo account helpers for recording. Disable credential-returning demo endpoints and demo setup scripts before public deployment, and use dedicated production accounts.
-
-[Vercel monorepo setup](https://vercel.com/docs/monorepos) · [Vercel deployment environments](https://vercel.com/docs/deployments/environments)
