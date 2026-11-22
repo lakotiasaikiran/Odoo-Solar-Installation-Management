@@ -1,6 +1,7 @@
 import { mountSolarFit } from './solarfit-routes.js';
 import { enquiryRoutes } from './enquiries.js';
 import { operationsRoutes } from './operations-routes.js';
+import { customerRoutes } from './customer-routes.js';
 import { createOdooAdapter } from './odoo.js';
 import pg from 'pg';
 import { createApp } from './app.js';
@@ -13,6 +14,7 @@ const app = createApp(pool, process.env.JWT_SECRET, {
     enquiryRoutes({ pool, crm, salesId: process.env.PHOTONIX_SALES_ID })(app, authenticate);
     mountSolarFit(app, authenticate, pool, crm);
     operationsRoutes({ pool })(app, authenticate);
+    customerRoutes({ pool, crm })(app);
   }
 });
 await pool.query('SELECT id FROM photonix_auth.account LIMIT 0');

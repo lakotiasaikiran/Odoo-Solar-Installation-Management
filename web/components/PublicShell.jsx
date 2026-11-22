@@ -40,6 +40,9 @@ export function PublicHeader() {
           <Link href="/enquiry" className="btn btn-primary btn-sm">
             Get a quote
           </Link>
+          <Link href="/customer/login" className="pub-staff-link" style={{ fontWeight: 600 }}>
+            Customer portal
+          </Link>
           <Link href="/staff" className="pub-staff-link">
             Staff sign in
           </Link>
@@ -73,6 +76,9 @@ export function PublicHeader() {
           </div>
           <Link href="/enquiry" className="btn btn-primary btn-md" onClick={() => setOpen(false)}>
             Get a quote
+          </Link>
+          <Link href="/customer/login" className="pub-staff-link" onClick={() => setOpen(false)} style={{ fontWeight: 600 }}>
+            Customer portal
           </Link>
           <Link href="/staff" className="pub-staff-link" onClick={() => setOpen(false)}>
             Staff sign in
