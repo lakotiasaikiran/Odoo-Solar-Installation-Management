@@ -47,6 +47,7 @@ try {
     GRANT USAGE ON SCHEMA photonix_auth TO photonix_api;
     GRANT SELECT, INSERT ON photonix_auth.account TO photonix_api;
     GRANT UPDATE (state, verified_by, password_hash) ON photonix_auth.account TO photonix_api;
+    GRANT INSERT ON photonix_auth.staff_sign_in TO photonix_api;
     GRANT SELECT, INSERT ON photonix_auth.review_event TO photonix_api;
     GRANT USAGE ON ALL SEQUENCES IN SCHEMA photonix_auth TO photonix_api;
   `);

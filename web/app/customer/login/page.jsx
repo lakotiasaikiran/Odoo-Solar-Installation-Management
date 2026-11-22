@@ -13,7 +13,7 @@ import "../../public.css";
 
 export default function CustomerLoginPage() {
   const router = useRouter();
-  const [tab, setTab] = useState("reference"); // 'reference' | 'password' | 'register'
+  const [tab, setTab] = useState("password"); // 'reference' | 'password' | 'register'
   
   // Form fields
   const [phone, setPhone] = useState("");
@@ -87,7 +87,7 @@ export default function CustomerLoginPage() {
   function handleQuickFill(demo) {
     setPhone(demo.phone);
     if (tab === "reference") {
-      setReference(demo.reference);
+      setTab("password"); setPassword("Photonix@123");
     } else {
       setPassword("Photonix@123");
     }
@@ -306,14 +306,14 @@ export default function CustomerLoginPage() {
               {tab === "reference" && (
                 <div>
                   <label style={{ display: "block", fontSize: "0.875rem", fontWeight: "500", marginBottom: "0.35rem" }}>
-                    Enquiry Reference Number
+                    Private tracking code
                   </label>
                   <div style={{ position: "relative" }}>
                     <FileText size={18} style={{ position: "absolute", left: "0.85rem", top: "50%", transform: "translateY(-50%)", color: "var(--color-text-muted)" }} />
                     <input
                       type="text"
                       className="field-input"
-                      placeholder="e.g. PX-000001"
+                      placeholder="PX-000001.YOURPRIVATECODE"
                       required
                       value={reference}
                       onChange={(e) => setReference(e.target.value.toUpperCase())}

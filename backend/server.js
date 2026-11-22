@@ -11,10 +11,11 @@ const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
 const crm = createOdooAdapter(process.env);
 const app = createApp(pool, process.env.JWT_SECRET, {
   mountEnquiries(app, authenticate) {
+    customerRoutes({ pool, crm })(app);
     enquiryRoutes({ pool, crm, salesId: process.env.PHOTONIX_SALES_ID })(app, authenticate);
     mountSolarFit(app, authenticate, pool, crm);
     operationsRoutes({ pool })(app, authenticate);
-    customerRoutes({ pool, crm })(app);
+
   }
 });
 await pool.query('SELECT id FROM photonix_auth.account LIMIT 0');

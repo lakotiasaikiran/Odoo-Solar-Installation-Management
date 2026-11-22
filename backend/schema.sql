@@ -73,4 +73,9 @@ CREATE TABLE IF NOT EXISTS photonix_crm.enquiry (
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now()
 );
+CREATE TABLE IF NOT EXISTS photonix_auth.staff_sign_in (
+  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  account_id uuid NOT NULL REFERENCES photonix_auth.account(id),
+  signed_in_at timestamptz NOT NULL DEFAULT now()
+);
 COMMIT;

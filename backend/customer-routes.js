@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { randomUUID } from 'node:crypto';
+import { randomUUID, createHmac } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 
 const CUSTOMER_AUDIENCE = 'photonix-customer';
@@ -94,6 +94,9 @@ export function customerRoutes({ pool, crm }) {
         return res.status(409).json({ error: 'An account with this mobile number already exists. Please sign in.' });
       }
 
+      const projects=await crm.listEnquiries({});
+      if(projects.some(project=>normalizePhone(project.phone)===normPhone))
+        return res.status(409).json({error:'This number has a project. Sign in with the private tracking code from your receipt.'});
       const id = randomUUID();
       const hash = await bcrypt.hash(password, 10);
       await pool.query(
@@ -113,6 +116,7 @@ export function customerRoutes({ pool, crm }) {
         customer: { id, phone: normPhone, name: name.trim(), email: email?.trim() || null }
       });
     } catch (err) {
+      if(err.code==='23505')return res.status(409).json({error:'This phone already has an account.'});
       console.error('Customer registration error:', err);
       res.status(500).json({ error: 'Registration failed. Please try again.' });
     }
@@ -129,7 +133,9 @@ export function customerRoutes({ pool, crm }) {
     try {
       // 1. Direct Reference Validation (e.g. PX-000001 or PX-000020)
       if (typeof reference === 'string' && reference.trim()) {
-        const ref = reference.trim().toUpperCase();
+        const [ref,code] = reference.trim().toUpperCase().split('.');
+        const expected = (prefix,size) => createHmac('sha256',secret).update(prefix+ref).digest('hex').slice(0,size).toUpperCase();
+        if (!code || ![expected('tracking-v2:',16),expected('tracking:',32)].includes(code)) return res.status(401).json({error:'Enter the private tracking code from your receipt.'});
         let leads = [];
         try {
           leads = await crm.listEnquiries({});
@@ -139,22 +145,11 @@ export function customerRoutes({ pool, crm }) {
           return res.status(401).json({ error: 'Enquiry reference and mobile number do not match.' });
         }
 
-        // Fetch or create customer record
-        let { rows: [customer] } = await pool.query(
-          'SELECT id, phone, name, email FROM photonix_auth.customer WHERE phone = $1',
-          [normPhone]
-        );
-        if (!customer) {
-          const newId = randomUUID();
-          const demoHash = await bcrypt.hash('Photonix@123', 10);
-          await pool.query(
-            `INSERT INTO photonix_auth.customer (id, phone, name, email, password_hash)
-             VALUES ($1, $2, $3, $4, $5) ON CONFLICT (phone) DO UPDATE SET last_login_at = now()`,
-            [newId, normPhone, lead.customerName || 'Customer', null, demoHash]
-          );
-          customer = { id: newId, phone: normPhone, name: lead.customerName || 'Customer', email: null };
-        }
-
+        const {rows:[customer]}=await pool.query(
+          `INSERT INTO photonix_auth.customer(id,phone,name,password_hash,last_login_at)
+           VALUES($1,$2,$3,$4,now()) ON CONFLICT(phone) DO UPDATE SET last_login_at=now()
+           RETURNING id,phone,name,email`,
+          [randomUUID(),normPhone,lead.customerName || 'Customer',await bcrypt.hash(randomUUID(),10)]);
         const token = jwt.sign(
           { sub: customer.id, role: 'customer', phone: normPhone, name: customer.name, email: customer.email },
           secret,
@@ -173,29 +168,6 @@ export function customerRoutes({ pool, crm }) {
         'SELECT id, phone, name, email, password_hash FROM photonix_auth.customer WHERE phone = $1',
         [normPhone]
       );
-
-      // Demo fallback: if account not in customer table but password is standard demo password,
-      // inspect CRM or jobs to auto-bootstrap customer session
-      if (!customer && password === 'Photonix@123') {
-        let leads = [];
-        try { leads = await crm.listEnquiries({}); } catch {}
-        const matchingLead = leads.find(l => normalizePhone(l.phone) === normPhone);
-        const custName = matchingLead?.customerName || 'Aarav Sharma';
-        const newId = randomUUID();
-        const demoHash = await bcrypt.hash('Photonix@123', 10);
-        await pool.query(
-          `INSERT INTO photonix_auth.customer (id, phone, name, email, password_hash)
-           VALUES ($1, $2, $3, $4, $5) ON CONFLICT (phone) DO NOTHING`,
-          [newId, normPhone, custName, `${normPhone}@photonix.customer`, demoHash]
-        );
-        customer = {
-          id: newId,
-          phone: normPhone,
-          name: custName,
-          email: `${normPhone}@photonix.customer`,
-          password_hash: demoHash
-        };
-      }
 
       if (!customer) {
         return res.status(401).json({ error: 'No customer account found with this phone number. Please register.' });

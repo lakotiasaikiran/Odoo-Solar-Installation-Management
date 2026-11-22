@@ -40,6 +40,7 @@ export function createApp(pool, secret, options = {}) {
     const { rows: [user] } = await pool.query(`SELECT * FROM ${tables} WHERE email=$1`, [email.trim().toLowerCase()]);
     const valid = await bcrypt.compare(password,user?.password_hash ?? dummyHash);
     if (!valid || user?.state !== 'active') return res.sendStatus(401);
+    await pool.query('INSERT INTO photonix_auth.staff_sign_in(account_id) VALUES($1)',[user.id]);
     res.json({ accessToken: jwt.sign({}, secret, { ...tokenOptions, algorithm: 'HS256', subject: user.id, expiresIn: '15m' }) });
   });
   async function authenticate(req,res,next) {
