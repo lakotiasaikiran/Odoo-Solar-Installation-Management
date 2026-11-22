@@ -36,6 +36,7 @@ export function enquiryRoutes({ pool, crm, salesId }) {
   return (app, authenticate) => {
     const router = Router();
     const trackingCode = ref => createHmac('sha256',process.env.JWT_SECRET).update('tracking:'+ref).digest('hex').slice(0,32).toUpperCase();
+    const shortCode = ref => createHmac('sha256',process.env.JWT_SECRET).update('tracking-v2:'+ref).digest('hex').slice(0,16).toUpperCase();
     const limiter = rateLimit({ windowMs: 60_000, limit: 30, standardHeaders: 'draft-7', legacyHeaders: false });
 
     // Public / Assisted Enquiry Submission (Check 1)
@@ -48,7 +49,7 @@ export function enquiryRoutes({ pool, crm, salesId }) {
         if (!owner.rowCount) return res.status(503).json({ error: 'Sales intake is temporarily unavailable.' });
 
         const lead = await crm.createEnquiry({ ...data, salesId: targetSalesId, customerId: null });
-        res.status(201).json({ reference: lead.reference, trackingCode: trackingCode(lead.reference) });
+        res.status(201).json({ reference: lead.reference, trackingCode: shortCode(lead.reference) });
       } catch (err) {
         next(err);
       }
@@ -59,7 +60,7 @@ export function enquiryRoutes({ pool, crm, salesId }) {
       const ref = String(req.params.reference || '').trim().toUpperCase();
       if (!/^PX-\d{6}$/.test(ref)) return res.status(400).json({ error: 'Invalid reference format (expected PX-000000)' });
 
-      if (req.get('X-Tracking-Code') !== trackingCode(ref)) return res.sendStatus(404);
+      if (![shortCode(ref),trackingCode(ref)].includes(req.get('X-Tracking-Code'))) return res.sendStatus(404);
       const numId = parseInt(ref.slice(3), 10);
       try {
         const lead = await crm.getEnquiry({ id: numId });
@@ -77,8 +78,8 @@ export function enquiryRoutes({ pool, crm, salesId }) {
           preliminaryCapacityKw: lead.preliminaryCapacityKw,
           surveyStatus: lead.surveyStatus,
           quoteStatus: lead.quoteStatus,
-          quoteAmount: lead.quoteStatus === 'sent' ? lead.quoteAmount : null,
-          quoteDetails: lead.quoteStatus === 'sent' ? lead.quoteDetails : null
+          quoteAmount: ['sent','accepted'].includes(lead.quoteStatus) ? lead.quoteAmount : null,
+          quoteDetails: ['sent','accepted'].includes(lead.quoteStatus) ? lead.quoteDetails : null
         });
       } catch {
         res.status(404).json({ error: 'Enquiry reference not found' });
@@ -136,9 +137,9 @@ export function enquiryRoutes({ pool, crm, salesId }) {
       }
     });
 
-    // Acceptance Check 2: Record Qualification Call (Sales role)
+    // Acceptance Check 2: Record Qualification Call (Sales role or Management)
     router.post('/:id/qualify', async (req, res, next) => {
-      if (req.actor.role !== 'sales') return res.sendStatus(403);
+      if (!['sales', 'director', 'manager', 'admin'].includes(req.actor.role)) return res.sendStatus(403);
       const id = Number(req.params.id);
       if (!Number.isSafeInteger(id) || id < 1) return res.sendStatus(404);
 
@@ -150,7 +151,7 @@ export function enquiryRoutes({ pool, crm, salesId }) {
       try {
         const lead = await crm.qualifyEnquiry({
           id,
-          salesId: req.actor.id,
+          salesId: req.actor.role === 'sales' ? req.actor.id : salesId,
           gridSuitability,
           monthlyBill: Number(monthlyBill) || 0,
           roofSpace: Number(roofSpace) || 0,
@@ -165,9 +166,9 @@ export function enquiryRoutes({ pool, crm, salesId }) {
       }
     });
 
-    // Acceptance Check 3: Record Technician Survey Findings (Surveyor role)
+    // Acceptance Check 3: Record Technician Survey Findings (Surveyor role or Management)
     router.post('/:id/survey', async (req, res, next) => {
-      if (req.actor.role !== 'surveyor') return res.sendStatus(403);
+      if (!['surveyor', 'director', 'admin'].includes(req.actor.role)) return res.sendStatus(403);
       const id = Number(req.params.id);
       if (!Number.isSafeInteger(id) || id < 1) return res.sendStatus(404);
 
@@ -201,7 +202,7 @@ export function enquiryRoutes({ pool, crm, salesId }) {
 
     // Acceptance Check 4: Technical Reviewer Decision (Approve or Return)
     router.post('/:id/review', async (req, res, next) => {
-      if (req.actor.role !== 'technical_reviewer') return res.sendStatus(403);
+      if (!['technical_reviewer', 'director', 'admin'].includes(req.actor.role)) return res.sendStatus(403);
       const id = Number(req.params.id);
       if (!Number.isSafeInteger(id) || id < 1) return res.sendStatus(404);
 
@@ -228,13 +229,17 @@ export function enquiryRoutes({ pool, crm, salesId }) {
 
     // Acceptance Check 4: Quotation Gate (Allow quote only after survey approval)
     router.post('/:id/quote', async (req, res, next) => {
-      if (req.actor.role !== 'sales') return res.sendStatus(403);
+      if (!['sales', 'director', 'manager', 'admin'].includes(req.actor.role)) return res.sendStatus(403);
       const id = Number(req.params.id);
       if (!Number.isSafeInteger(id) || id < 1) return res.sendStatus(404);
 
       try {
         // Enforce gate: verify survey status first!
-        const existing = await crm.getEnquiry({ id, salesId: req.actor.id });
+        const existing = await crm.getEnquiry({
+          id,
+          salesId: req.actor.role === 'sales' ? req.actor.id : undefined,
+          reviewerId: req.actor.role === 'sales' ? undefined : req.actor.id
+        });
         if (!existing) return res.sendStatus(404);
         if (existing.surveyStatus !== 'approved') {
           return res.status(403).json({
@@ -255,7 +260,7 @@ export function enquiryRoutes({ pool, crm, salesId }) {
         const net=quoteDetails.netEffectiveCost;
         const updated = await crm.generateQuote({
           id,
-          salesId: req.actor.id,
+          salesId: req.actor.role === 'sales' ? req.actor.id : salesId,
           quoteAmount: net,
           quoteDetails
         });

@@ -1,0 +1,27 @@
+.panel {
+  display: grid;
+  gap: 1.25rem;
+  padding: clamp(.25rem, 1vw, 1rem);
+  min-width: 0;
+}
+.panel h2, .panel h3, .panel p { margin: 0; }
+.panel label { display: grid; gap: .5rem; min-width: 0; }
+.panel select, .panel input { width: 100%; min-width: 0; }
+.panel section {
+  border-top: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  padding-top: 1.25rem;
+  display: grid;
+  gap: 1rem;
+}
+.panel button { justify-self: start; max-width: 100%; }
+.panel form { display: grid; gap: 1rem; }
+.panel details { padding-block: .5rem; overflow-wrap: anywhere; }
+.panel summary { cursor: pointer; }
+.panel details p { margin-top: .75rem; line-height: 1.6; }
+@media (min-width: 48rem) {
+  .panel form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .panel form button { grid-column: 1 / -1; }
+}.totals { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr)); gap: .875rem; margin: 0; }
+.totals div { padding: .875rem 1rem; border: 1px solid color-mix(in srgb, currentColor 18%, transparent); border-radius: .75rem; }
+.totals dt { font-size: .875rem; }
+.totals dd { margin: .375rem 0 0; font-size: 1.125rem; font-weight: 650; }

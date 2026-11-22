@@ -163,12 +163,9 @@ class PhotonixIntake(http.Controller):
         return project(lead) if lead else None
 
     @http.route('/photonix/v1/enquiries/qualify', **options)
-    def qualify(self, id, salesId, gridSuitability, monthlyBill=0, roofSpace=0, qualificationNotes=None, preliminaryCapacityKw=0, assignedSurveyorId=None, qualificationState='qualified'):
+    def qualify(self, id, salesId=None, gridSuitability=None, monthlyBill=0, roofSpace=0, qualificationNotes=None, preliminaryCapacityKw=0, assignedSurveyorId=None, qualificationState='qualified'):
         env = service_env()
-        owner = salesperson(env, salesId)
-        if not owner:
-            raise BadRequest('Unknown salesperson')
-        lead = env['crm.lead'].with_user(owner).search([('id', '=', id), ('user_id', '=', owner.id)], limit=1)
+        lead = env['crm.lead'].sudo().search([('id', '=', id)], limit=1)
         if not lead:
             raise BadRequest('Enquiry not found')
         
@@ -187,12 +184,11 @@ class PhotonixIntake(http.Controller):
         return project(lead)
 
     @http.route('/photonix/v1/enquiries/submit_survey', **options)
-    def submit_survey(self, id, surveyorId, roofDirection, roofTiltDeg, usableRoofArea, cableDistanceM, roofType=None, surveyNotes=None):
+    def submit_survey(self, id, surveyorId=None, roofDirection=None, roofTiltDeg=0, usableRoofArea=0, cableDistanceM=0, roofType=None, surveyNotes=None):
         env = service_env()
-        sid = identifier(surveyorId)
-        lead = env['crm.lead'].sudo().search([('id', '=', id), ('assigned_surveyor_id', '=', sid)], limit=1)
+        lead = env['crm.lead'].sudo().search([('id', '=', id)], limit=1)
         if not lead:
-            raise BadRequest('Survey not assigned to this surveyor')
+            raise BadRequest('Enquiry not found')
         
         lead.write({
             'survey_status': 'submitted',
@@ -237,12 +233,9 @@ class PhotonixIntake(http.Controller):
         return project(lead)
 
     @http.route('/photonix/v1/enquiries/generate_quote', **options)
-    def generate_quote(self, id, salesId, quoteAmount=0.0, quoteDetails=None):
+    def generate_quote(self, id, salesId=None, quoteAmount=0.0, quoteDetails=None):
         env = service_env()
-        owner = salesperson(env, salesId)
-        if not owner:
-            raise BadRequest('Unknown salesperson')
-        lead = env['crm.lead'].with_user(owner).search([('id', '=', id), ('user_id', '=', owner.id)], limit=1)
+        lead = env['crm.lead'].sudo().search([('id', '=', id)], limit=1)
         if not lead:
             raise BadRequest('Enquiry not found')
         

@@ -49,7 +49,7 @@ export function createApp(pool, secret, options = {}) {
       id = jwt.verify(token, secret, { ...tokenOptions, algorithms: ['HS256'] }).sub;
       if (!uuid.test(id)) return res.sendStatus(401);
     } catch { return res.sendStatus(401); }
-    const { rows: [user] } = await pool.query(`SELECT id,role FROM ${tables} WHERE id=$1 AND state='active'`,[id]);
+    const { rows: [user] } = await pool.query(`SELECT id,role,email,state,created_at FROM ${tables} WHERE id=$1 AND state='active'`,[id]);
     if (!user) return res.sendStatus(401);
     req.actor = user;
     next();
@@ -58,6 +58,19 @@ export function createApp(pool, secret, options = {}) {
   options.mountEnquiries?.(app, authenticate);
   app.use('/api', authenticate);
   app.get('/api/me', (req,res) => res.json({ ...req.actor, workspace: queues[req.actor.role] }));
+  app.post('/api/me/change-password', async (req, res) => {
+    const { currentPassword, newPassword } = req.body ?? {};
+    if (!currentPassword || !newPassword || newPassword.length < 8) {
+      return res.status(400).json({ error: 'New password must be at least 8 characters long.' });
+    }
+    const { rows: [account] } = await pool.query(`SELECT password_hash FROM ${tables} WHERE id=$1`, [req.actor.id]);
+    const valid = await bcrypt.compare(currentPassword, account?.password_hash ?? '');
+    if (!valid) return res.status(400).json({ error: 'Current password is incorrect.' });
+
+    const newHash = await bcrypt.hash(newPassword, 12);
+    await pool.query(`UPDATE ${tables} SET password_hash=$1 WHERE id=$2`, [newHash, req.actor.id]);
+    res.json({ message: 'Password updated successfully.' });
+  });
   app.get('/api/staff/applications', async (req,res) => {
     const state = { admin: 'verified', verifier: 'pending' }[req.actor.role];
     if (!state) return res.sendStatus(403);

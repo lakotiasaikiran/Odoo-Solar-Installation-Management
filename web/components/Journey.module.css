@@ -1,0 +1,36 @@
+.board { min-width:0; background:#faf6ee; color:#142a41; border-radius:18px; overflow:hidden; box-shadow:0 18px 48px #07132040; }
+.scene { position:relative; height:clamp(125px,15vw,200px); overflow:hidden; background-color:#203e57; background-image:linear-gradient(#ffffff10 1px,transparent 1px),linear-gradient(90deg,#ffffff10 1px,transparent 1px); background-size:22px 22px; }
+.sun { position:absolute; width:52px; height:52px; border-radius:50%; background:#f4b863; left:17%; top:18%; box-shadow:0 0 0 10px #f4b86320,0 0 0 22px #f4b86310; }
+.array { position:absolute; width:55%; height:68%; left:28%; bottom:8%; transform:skew(-25deg) rotate(-8deg); border:3px solid #cad8dd; background-color:#132e48; background-image:linear-gradient(105deg,transparent 20%,#a4dbed55 45%,transparent 70%),linear-gradient(90deg,#adcdd7 2px,transparent 2px),linear-gradient(#adcdd7 2px,transparent 2px); background-size:220% 100%,16.66% 100%,100% 25%; box-shadow:4px 7px 0 #0b2336; }
+.tool { position:absolute; right:9%; top:14%; display:grid; place-items:center; width:42px; height:42px; color:#182e42; border-radius:12px; background:#ffe0a2; }
+.controls { display:grid; grid-template-columns:repeat(4,1fr); border-bottom:1px solid #c3c7c8; }
+.controls button { font:inherit; font-weight:650; padding:.85rem .15rem; border:0; background:transparent; color:#324859; cursor:pointer; }
+.controls button[aria-pressed=true] { background:#eeddbb; box-shadow:inset 0 -3px #866127; }
+.board :focus-visible { outline:3px solid #b45a09; outline-offset:-3px; }
+.detail { padding:clamp(1rem,2vw,1.65rem); }
+.detail h2 { font-size:1.55rem; color:#142a41; margin:0; }
+.detail p { margin:.55rem 0 1rem; line-height:1.55; color:#3f5260; min-height:3.1em; }
+.detail a { display:inline-flex; align-items:center; gap:.35rem; color:#203c53; font-weight:700; text-decoration:underline; text-underline-offset:4px; }
+@media(prefers-reduced-motion:no-preference) {
+ .sun { animation:sunrise 1.1s ease-out; }
+ .array { animation:glint 2.8s ease-out both; }
+ .tool { animation:arrive .45s ease-out; }
+ @keyframes sunrise { from { transform:translate(-12px,24px); opacity:.25; } }
+ @keyframes glint { from {background-position:110% 0,0 0,0 0;} to {background-position:0 0,0 0,0 0;} }
+ @keyframes arrive { from {opacity:0; transform:translateY(8px) rotate(-10deg);} }
+}
+
+.board { display:grid; grid-template-columns: 1fr 1fr; grid-template-areas:"bar bar" "controls controls" "scene detail"; text-align:left; border:1px solid #d1bc8e; background:#fffaf0; box-shadow:0 24px 70px #04121d55; }
+.bar { grid-area:bar; display:flex; align-items:center; justify-content:space-between; padding:.75rem 1.25rem; background:#112d41; color:#f7edd9; }
+.bar span { display:flex; align-items:center; gap:.7rem; font-weight:650; }
+.bar img { border-radius:50%; }
+.bar button { background:transparent; border:1px solid #81939d; border-radius:2rem; color:inherit; padding:.4rem .85rem; font:inherit; cursor:pointer; }
+.scene { grid-area:scene; height:100%; min-height:180px; }
+.controls { grid-area:controls; background:#f4ecdc; }
+.detail { grid-area:detail; align-self:center; }
+.detail small { display:block; font:600 .72rem/1.6 monospace; letter-spacing:.1em; text-transform:uppercase; color:#73592f; }
+@media(max-width:640px){ .board{grid-template-columns:1fr;grid-template-areas:"bar" "controls" "scene" "detail";} .scene{min-height:128px;} .bar{padding:.65rem .8rem;} }
+
+.scene {background:linear-gradient(0deg,#10263455,transparent 65%),url("/brand/solar-array.jpg") center 55% / cover;}
+.detail {padding:clamp(1.4rem,3vw,2.3rem);}
+@media(max-width:640px){.scene{min-height:155px;}}
