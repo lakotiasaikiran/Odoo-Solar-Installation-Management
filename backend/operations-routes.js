@@ -107,6 +107,7 @@ export function operationsRoutes({ pool }) {
 
   // 5. Demo Accounts Retrieval (for demo mode login helper)
   router.get('/demo-accounts', async (_req, res) => {
+    if (process.env.NODE_ENV === 'production') return res.sendStatus(404);
     try {
       const p = process.env.PHOTONIX_DEMO_ACCOUNTS;
       if (!p) return res.status(404).json({ error: 'Demo accounts not configured' });

@@ -44,7 +44,7 @@ export function customerRoutes({ pool, crm }) {
       console.warn('Customer schema notice:', err.message);
     }
   }
-  initSchema();
+  if (process.env.NODE_ENV !== 'production' && crm) initSchema();
 
   // Authentication Middleware for Customer Requests
   function authenticateCustomer(req, res, next) {
@@ -198,6 +198,7 @@ export function customerRoutes({ pool, crm }) {
 
   // Demo Customers List for one-click testing
   router.get('/demo-customers', async (_req, res) => {
+    if (!crm || process.env.NODE_ENV === 'production') return res.sendStatus(404);
     try {
       let leads = [];
       try { leads = await crm.listEnquiries({}); } catch {}
